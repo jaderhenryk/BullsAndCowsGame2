@@ -46,7 +46,12 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
     }
     if (Guess.Len() != HiddenWord.Len())
     {
-        PrintLine(TEXT("The Hidden word is %i characters long.\nYou lost."), HiddenWord.Len());
+        PrintLine(TEXT("The Hidden word is %i characters long."), HiddenWord.Len());
+        return;
+    }
+    if (!bIsIsogram(Guess))
+    {
+        PrintLine(TEXT("No repeating letters."));
         return;
     }
     --Lives;
@@ -61,6 +66,21 @@ void UBullCowCartridge::ProcessGuess(FString Guess)
     PrintLine(TEXT("Your guess is wrong."));
     PrintLine(TEXT("You have %i lives remaining"), Lives);
     return;
+}
+
+bool UBullCowCartridge::bIsIsogram(FString Word) const
+{
+    for (int32 Index = 0; Index < Word.Len(); Index++)
+    {
+        for (int32 Comparison = Index + 1; Comparison < Word.Len(); Comparison++)
+        {
+            if (Word[Index] == Word[Comparison])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void UBullCowCartridge::EndGame()
